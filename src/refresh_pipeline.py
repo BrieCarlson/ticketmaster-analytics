@@ -20,6 +20,7 @@ def main():
         "src/fetch_events.py",
         "src/transform.py",
         "src/load_database.py",
+        "src/export_tableau.py",
     ]
 
     for script in scripts:

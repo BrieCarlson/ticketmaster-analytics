@@ -108,71 +108,84 @@ def main():
             ),
         )
 
-    # CURRENT EVENTS TABLE
-    for _, row in df.iterrows():
-        values = (
-            clean_value(row["event_id"]),
-            clean_value(row["event_name"]),
-            clean_value(row["event_url"]),
-            clean_value(row["event_date"]),
-            clean_value(row["event_time"]),
-            clean_value(row["timezone"]),
-            clean_value(row["event_status"]),
-            clean_value(row["venue_id"]),
-            clean_value(row["attraction_id"]),
-            clean_value(row["segment"]),
-            clean_value(row["genre"]),
-            clean_value(row["subgenre"]),
-            clean_value(row["promoter"]),
-            clean_value(row["price_min"]),
-            clean_value(row["price_max"]),
-            clean_value(row["currency"]),
-        )
+        # CURRENT EVENTS TABLE
+        current_event_ids = set(df["event_id"].dropna())
 
-        cursor.execute(
-            """
-            INSERT INTO events (
-                event_id,
-                event_name,
-                event_url,
-                event_date,
-                event_time,
-                timezone,
-                event_status,
-                venue_id,
-                attraction_id,
-                segment,
-                genre,
-                subgenre,
-                promoter,
-                price_min,
-                price_max,
-                currency
+        if current_event_ids:
+            placeholders = ", ".join(["%s"] * len(current_event_ids))
+
+            cursor.execute(
+                f"""
+                DELETE FROM events
+                WHERE event_id NOT IN ({placeholders});
+                """,
+                tuple(current_event_ids),
             )
-            VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s, %s, %s, %s
+
+        for _, row in df.iterrows():
+            values = (
+                clean_value(row["event_id"]),
+                clean_value(row["event_name"]),
+                clean_value(row["event_url"]),
+                clean_value(row["event_date"]),
+                clean_value(row["event_time"]),
+                clean_value(row["timezone"]),
+                clean_value(row["event_status"]),
+                clean_value(row["venue_id"]),
+                clean_value(row["attraction_id"]),
+                clean_value(row["segment"]),
+                clean_value(row["genre"]),
+                clean_value(row["subgenre"]),
+                clean_value(row["promoter"]),
+                clean_value(row["price_min"]),
+                clean_value(row["price_max"]),
+                clean_value(row["currency"]),
             )
-            ON CONFLICT (event_id)
-            DO UPDATE SET
-                event_name = EXCLUDED.event_name,
-                event_url = EXCLUDED.event_url,
-                event_date = EXCLUDED.event_date,
-                event_time = EXCLUDED.event_time,
-                timezone = EXCLUDED.timezone,
-                event_status = EXCLUDED.event_status,
-                venue_id = EXCLUDED.venue_id,
-                attraction_id = EXCLUDED.attraction_id,
-                segment = EXCLUDED.segment,
-                genre = EXCLUDED.genre,
-                subgenre = EXCLUDED.subgenre,
-                promoter = EXCLUDED.promoter,
-                price_min = EXCLUDED.price_min,
-                price_max = EXCLUDED.price_max,
-                currency = EXCLUDED.currency;
-            """,
-            values,
-        )
+
+            cursor.execute(
+                """
+                INSERT INTO events (
+                    event_id,
+                    event_name,
+                    event_url,
+                    event_date,
+                    event_time,
+                    timezone,
+                    event_status,
+                    venue_id,
+                    attraction_id,
+                    segment,
+                    genre,
+                    subgenre,
+                    promoter,
+                    price_min,
+                    price_max,
+                    currency
+                )
+                VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s
+                )
+                ON CONFLICT (event_id)
+                DO UPDATE SET
+                    event_name = EXCLUDED.event_name,
+                    event_url = EXCLUDED.event_url,
+                    event_date = EXCLUDED.event_date,
+                    event_time = EXCLUDED.event_time,
+                    timezone = EXCLUDED.timezone,
+                    event_status = EXCLUDED.event_status,
+                    venue_id = EXCLUDED.venue_id,
+                    attraction_id = EXCLUDED.attraction_id,
+                    segment = EXCLUDED.segment,
+                    genre = EXCLUDED.genre,
+                    subgenre = EXCLUDED.subgenre,
+                    promoter = EXCLUDED.promoter,
+                    price_min = EXCLUDED.price_min,
+                    price_max = EXCLUDED.price_max,
+                    currency = EXCLUDED.currency;
+                """,
+                values,
+            )
 
     # HISTORICAL SNAPSHOT
     for _, row in df.iterrows():
