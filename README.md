@@ -6,8 +6,6 @@ An automated data analytics pipeline that collects Ticketmaster event data acros
 
 [![Ticketmaster Event Analytics Dashboard](docs/dashboard-preview.png)](https://public.tableau.com/views/TicketmasterEventAnalytics/Dashboard1?:showVizHome=no)
 
-**[View the Interactive Dashboard on Tableau Public](https://public.tableau.com/views/TicketmasterEventAnalytics/Dashboard1?:showVizHome=no)**
-
 ## Project Overview
 
 This project uses the Ticketmaster Discovery API to collect event data across Ohio, Michigan, Indiana, Kentucky, Pennsylvania, and West Virginia. The data is processed through a Python ETL pipeline, stored in a PostgreSQL database, and maintained through historical daily snapshots to track changes in event availability and details over time.
