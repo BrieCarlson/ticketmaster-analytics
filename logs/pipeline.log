@@ -3,7 +3,7 @@ Fetching OH...
 OH: fetched 200 events (page 1/15)
 
 Fetching MI...
-MI: fetched 200 events (page 1/13)
+MI: fetched 200 events (page 1/12)
 
 Fetching IN...
 IN: fetched 200 events (page 1/8)
@@ -12,13 +12,13 @@ Fetching KY...
 KY: fetched 200 events (page 1/4)
 
 Fetching PA...
-PA: fetched 200 events (page 1/21)
+PA: fetched 200 events (page 1/20)
 
 Fetching WV...
-WV: fetched 199 events (page 1/1)
+WV: fetched 195 events (page 1/1)
 
-Done. Saved 1199 events to data/raw_events.json
-Saved 1199 cleaned events to data/events_clean.csv
+Done. Saved 1195 events to data/raw_events.json
+Saved 1195 cleaned events to data/events_clean.csv
 Duplicates removed: 0
 Columns: 22
 
@@ -28,15 +28,27 @@ event_id, event_name, event_url, event_date, event_time, timezone, event_status,
 First 5 events:
          event_id  event_name                                                                              event_url event_date event_time         timezone event_status state   city     venue_id        venue_name    latitude    longitude segment              genre           subgenre attraction_id attraction_name         promoter  price_min  price_max currency
 vv1AFZkfAGkdLNlIH Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-20-2027/event/08006505DF8EBA3C 2027-03-20   12:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
+vv1AFZkfAGkdLxhIz Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-19-2027/event/08006505DF89BA38 2027-03-19   19:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
 vv1AFZkfAGkdL0Dtv Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-20-2027/event/08006505DF93BA41 2027-03-20   18:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
 vv1AFZkfAGkdLJ5t1 Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-21-2027/event/08006505DF98BA4A 2027-03-21   12:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
-vv1AFZkfAGkdLxhIz Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-19-2027/event/08006505DF89BA38 2027-03-19   19:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
 vv1AFZkfAGkdLEht3 Monster Jam https://www.ticketmaster.com/monster-jam-toledo-ohio-03-21-2027/event/08006505DF9DBA52 2027-03-21   18:00:00 America/New_York      offsale    OH Toledo KovZpZAJA6FA Huntington Center 41.65103800 -83.53757100  Sports Motorsports/Racing Motorsports/Racing   K8vZ917uyff     Monster Jam FELD MOTORSPORTS        NaN        NaN      NaN
-Snapshot date: 2026-09-18
-Processed 101 venues.
-Processed 276 attractions.
-Processed 1,199 events.
-Saved 1,199 historical event snapshots.
+Traceback (most recent call last):
+  File "C:\ticketmaster-analytics\src\load_database.py", line 266, in <module>
+    main()
+    ~~~~^^
+  File "C:\ticketmaster-analytics\src\load_database.py", line 145, in main
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        """
+        ^^^
+    ...<40 lines>...
+        values,
+        ^^^^^^^
+    )
+    ^
+psycopg2.errors.ForeignKeyViolation: insert or update on table "events" violates foreign key constraint "events_attraction_id_fkey"
+DETAIL:  Key (attraction_id)=(K8vZpZAFIAAk) is not present in table "attractions".
+
 
 ============================================================
 Running src/fetch_events.py
@@ -49,7 +61,19 @@ Running src/transform.py
 ============================================================
 Running src/load_database.py
 ============================================================
-
-============================================================
-PIPELINE COMPLETE
-============================================================
+Traceback (most recent call last):
+  File "C:\ticketmaster-analytics\src\refresh_pipeline.py", line 35, in <module>
+    main()
+    ~~~~^^
+  File "C:\ticketmaster-analytics\src\refresh_pipeline.py", line 27, in main
+    run_step(script)
+    ~~~~~~~~^^^^^^^^
+  File "C:\ticketmaster-analytics\src\refresh_pipeline.py", line 10, in run_step
+    result = subprocess.run(
+        [sys.executable, script],
+        check=True,
+    )
+  File "C:\Python314\Lib\subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['C:\\ticketmaster-analytics\\.venv\\Scripts\\python.exe', 'src/load_database.py']' returned non-zero exit status 1.
